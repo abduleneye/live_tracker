@@ -21,7 +21,7 @@ class _BottomCardState extends State<BottomCard> {
       padding: const EdgeInsets.symmetric(horizontal: 10),
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 10),
-        width: double.infinity,
+      //  width: double.infinity,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(30),
           color: AppColors.background,
@@ -29,9 +29,9 @@ class _BottomCardState extends State<BottomCard> {
         child: Column(
           children: [
             _buildEtaRow(),
-             SizedBox(height: 15.h),
+             SizedBox(height: 15),
             _buildMainCard(),
-             SizedBox(height: 8.h),
+             SizedBox(height: 8),
 
           ],
         ),
@@ -142,7 +142,7 @@ class _BottomCardState extends State<BottomCard> {
           Text(
             "Call",
             style: GoogleFonts.inter(
-              fontSize: 14.sp,
+              fontSize: 14,
               fontWeight: FontWeight.w500,
               color: const Color(0xffFFFFFF),
             ),
@@ -224,7 +224,7 @@ class _BottomCardState extends State<BottomCard> {
               ),
             ),
              SizedBox(
-              height: 60.h,
+              height: 60,
               child: DottedLine(direction: Axis.vertical),
             ),
             const Icon(Icons.location_on_outlined),
@@ -252,27 +252,29 @@ class _BottomCardState extends State<BottomCard> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children:  [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-                "On Delivery",
-              style: AppTextStyles.greyTexts,
-            ),
-            Text(
-                "Courier is delivering the package",
-              style: GoogleFonts.inter(
-                  fontSize: 12.sp,
-                  fontWeight: FontWeight.w500,
-                  color: Color(0xff1b1c1e)
-              ),
-            ),
-            Text(
-                "25 minutes destination",
-              style: AppTextStyles.greyTexts,
-            ),
-          ],
-        ),
+       Expanded(
+         child:  Column(
+           crossAxisAlignment: CrossAxisAlignment.start,
+           children: [
+             Text(
+               "On Delivery",
+               style: AppTextStyles.greyTexts,
+             ),
+             Text(
+               "Courier is delivering the package",
+               style: GoogleFonts.inter(
+                   fontSize: 12,
+                   fontWeight: FontWeight.w500,
+                   color: Color(0xff1b1c1e)
+               ),
+             ),
+             Text(
+               "25 minutes destination",
+               style: AppTextStyles.greyTexts,
+             ),
+           ],
+         ),
+       ),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
