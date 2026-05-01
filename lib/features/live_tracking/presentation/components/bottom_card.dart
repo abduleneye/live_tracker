@@ -1,6 +1,7 @@
 import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -8,13 +9,15 @@ import '../../../../core/utils/app_colors.dart';
 import '../../../../core/utils/app_text_styles.dart';
 
 class BottomCard extends StatefulWidget {
-  const BottomCard({super.key});
+  final RoadInfo? roadInfo;
+   const BottomCard({super.key, required this.roadInfo});
 
   @override
   State<BottomCard> createState() => _BottomCardState();
 }
 
 class _BottomCardState extends State<BottomCard> {
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -39,7 +42,6 @@ class _BottomCardState extends State<BottomCard> {
     );
   }
 
-  // =========================
   Widget _buildEtaRow() {
     return  Padding(
       padding: EdgeInsets.symmetric(horizontal: 29.5.w, vertical: 16.h),
@@ -52,7 +54,9 @@ class _BottomCardState extends State<BottomCard> {
           SizedBox(width: 12),
           Expanded(
             child: Text(
-              "The package is estimated to arrive within the next 25 minutes.",
+              "The package is estimated to arrive within the next ${widget.roadInfo?.duration  == null
+                  ? "calculating"
+                  : (widget.roadInfo!.duration! / 60).round()} minutes.",
               style: AppTextStyles.body,
             ),
           ),
@@ -61,7 +65,6 @@ class _BottomCardState extends State<BottomCard> {
     );
   }
 
-  // =========================
   Widget _buildMainCard() {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 10),
@@ -84,7 +87,6 @@ class _BottomCardState extends State<BottomCard> {
     );
   }
 
-  // =========================
   Widget _buildCourierRow() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -113,7 +115,6 @@ class _BottomCardState extends State<BottomCard> {
     );
   }
 
-  // =========================
   Widget _buildCallButton() {
     return Container(
 
@@ -152,7 +153,6 @@ class _BottomCardState extends State<BottomCard> {
     );
   }
 
-  // =========================
   Widget _buildOrderRow() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -175,7 +175,6 @@ class _BottomCardState extends State<BottomCard> {
     );
   }
 
-  // =========================
   Widget _buildStatusChip() {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 19.5),
@@ -202,7 +201,6 @@ class _BottomCardState extends State<BottomCard> {
     );
   }
 
-  // =========================
   Widget _buildJourneyStatus() {
     return Row(
       children: [
@@ -236,7 +234,6 @@ class _BottomCardState extends State<BottomCard> {
     );
   }
 
-  // =========================
   Widget _buildJourneyDetails() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -269,7 +266,7 @@ class _BottomCardState extends State<BottomCard> {
                ),
              ),
              Text(
-               "25 minutes destination",
+               "${widget.roadInfo?.duration == null ? "calculating" : (widget.roadInfo!.duration! / 60).round()} minutes to destination.",
                style: AppTextStyles.greyTexts,
              ),
            ],
