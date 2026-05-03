@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import 'features/live_tracking/presentation/screens/live_tracking_screen.dart';
+import 'features/live_tracking/presentation/view/screens/live_tracking_screen.dart';
+
 
 void main() {
   runApp(
-      ScreenUtilInit(
-        designSize: const Size(428, 926),
-        minTextAdapt: true,
-        builder: (context, child) {
-          return const MyApp();
-        },
-      )
+     ProviderScope(child:  ScreenUtilInit(
+       designSize: const Size(428, 926),
+       minTextAdapt: true,
+       builder: (context, child) {
+         return const MyApp();
+       },
+     ))
   );
 }
 
