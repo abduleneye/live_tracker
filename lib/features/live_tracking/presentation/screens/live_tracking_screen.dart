@@ -7,7 +7,6 @@ import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
 import 'package:live_tracker/core/utils/app_colors.dart';
 import 'package:live_tracker/features/live_tracking/presentation/components/bottom_card.dart';
 import 'package:live_tracker/features/live_tracking/presentation/components/map_screen.dart';
-
 class LiveTrackingScreen extends StatefulWidget {
   const LiveTrackingScreen({super.key});
 
