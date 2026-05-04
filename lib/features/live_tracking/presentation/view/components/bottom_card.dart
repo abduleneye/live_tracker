@@ -17,7 +17,8 @@ class BottomCard extends StatefulWidget {
 
 class _BottomCardState extends State<BottomCard> {
 
-  @override
+  bool isExpanded = false;
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -32,8 +33,28 @@ class _BottomCardState extends State<BottomCard> {
             dividerColor: Colors.transparent, // removes line
           ),
           child: ExpansionTile(
-            leading: Container(
-              color: Colors.red,
+            onExpansionChanged: (value) {
+              setState(() => isExpanded = value);
+            },
+            trailing: Padding(
+              padding: EdgeInsets.only(right: 8),
+              child: AnimatedRotation(
+                turns: isExpanded ? 0.5 : 0,
+                duration: Duration(milliseconds: 250),
+                child: Container(
+                  height: 32,
+                  width: 32,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: AppColors.containerColor,
+                  ),
+                  child: const Icon(
+                    Icons.keyboard_arrow_down,
+                    color: Colors.white,
+                    size: 20,
+                  ),
+                ),
+              ),
             ),
             tilePadding: EdgeInsets.zero,
             childrenPadding: EdgeInsets.zero,
@@ -63,21 +84,26 @@ class _BottomCardState extends State<BottomCard> {
     );
   }
   Widget _buildEtaRow() {
-    return  Padding(
+    return Padding(
       padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16.h),
       child: Row(
         children: [
           Icon(
-              Icons.access_time_sharp,
-              size: 18,
-              color: Color(0xff666666)),
+            Icons.access_time_sharp,
+            size: 18,
+            color: Color(0xff666666),
+          ),
           SizedBox(width: 12),
+
+          // 👇 THIS is the fix
           Expanded(
             child: Text(
-              "The package is estimated to arrive within the next ${widget.roadInfo?.duration  == null
+              "The package is estimated to arrive within the next "
+                  "${widget.roadInfo?.duration == null
                   ? "calculating"
                   : (widget.roadInfo!.duration! / 60).round()} minutes.",
               style: AppTextStyles.body,
+              softWrap: true,
             ),
           ),
         ],
