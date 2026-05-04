@@ -18,32 +18,53 @@ class BottomCard extends StatefulWidget {
 class _BottomCardState extends State<BottomCard> {
 
   @override
+  @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10),
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 10),
-      //  width: double.infinity,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(30),
           color: AppColors.background,
         ),
-        child: Column(
-          children: [
-            _buildEtaRow(),
-             SizedBox(height: 15),
-            _buildMainCard(),
-             SizedBox(height: 8),
+        child: Theme(
+          data: Theme.of(context).copyWith(
+            dividerColor: Colors.transparent, // removes line
+          ),
+          child: ExpansionTile(
+            leading: Container(
+              color: Colors.red,
+            ),
+            tilePadding: EdgeInsets.zero,
+            childrenPadding: EdgeInsets.zero,
 
-          ],
+            collapsedBackgroundColor: AppColors.background,
+            backgroundColor: AppColors.background,
+
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(30),
+            ),
+            collapsedShape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(30),
+            ),
+
+            //HEADER (always visible)
+            title: _buildEtaRow(),
+
+            //EXPANDED CONTENT
+            children: [
+              const SizedBox(height: 10),
+              _buildMainCard(),
+              const SizedBox(height: 8),
+            ],
+          ),
         ),
       ),
     );
   }
-
   Widget _buildEtaRow() {
     return  Padding(
-      padding: EdgeInsets.symmetric(horizontal: 29.5.w, vertical: 16.h),
+      padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16.h),
       child: Row(
         children: [
           Icon(

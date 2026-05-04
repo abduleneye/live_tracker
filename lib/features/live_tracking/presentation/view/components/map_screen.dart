@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../di/tracking_providers.dart';
 
@@ -47,6 +48,8 @@ class _MapScreenState extends ConsumerState<MapScreen> {
                 color: Colors.red, size: 80),
           ),
         );
+        await controller.moveTo(currentPoint, animate: true);
+
       } else {
         await controller.addMarker(
           currentPoint,
@@ -90,7 +93,8 @@ class _MapScreenState extends ConsumerState<MapScreen> {
 
     Future<void> drawRoadPickUpToDrop() async {
       GeoPoint start = GeoPoint(latitude: 9.0765, longitude: 7.3986);
-       end   = GeoPoint(latitude: 9.0048642, longitude: 7.6922897);
+       end  = GeoPoint(latitude: 9.0579, longitude: 7.4951);
+// GeoPoint(latitude: 9.0048642, longitude: 7.6922897);
 
       await controller.clearAllRoads();
 
@@ -122,7 +126,7 @@ class _MapScreenState extends ConsumerState<MapScreen> {
     return OSMFlutter(
       controller: controller,
       osmOption: OSMOption(
-        zoomOption: ZoomOption(initZoom: 16),
+        zoomOption: ZoomOption(initZoom: 15.h),
         showDefaultInfoWindow: true,
       ),
       onMapIsReady: (isReady) {

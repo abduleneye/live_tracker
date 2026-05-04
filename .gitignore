@@ -32,6 +32,7 @@ migrate_working_dir/
 .pub/
 /build/
 /coverage/
+lib/features/live_tracking/presentation/view/components/commented_map_codes
 
 # Symbolication related
 app.*.symbols
