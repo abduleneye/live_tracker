@@ -37,7 +37,7 @@ class _BottomCardState extends State<BottomCard> {
               setState(() => isExpanded = value);
             },
             trailing: Padding(
-              padding: EdgeInsets.only(right: 8),
+              padding: EdgeInsets.only(right: 6),
               child: AnimatedRotation(
                 turns: isExpanded ? 0.5 : 0,
                 duration: Duration(milliseconds: 250),
@@ -85,7 +85,7 @@ class _BottomCardState extends State<BottomCard> {
   }
   Widget _buildEtaRow() {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16.h),
+      padding: EdgeInsets.symmetric(horizontal: 4, vertical: 16.h),
       child: Row(
         children: [
           Icon(
@@ -100,7 +100,7 @@ class _BottomCardState extends State<BottomCard> {
             child: Text(
               "The package is estimated to arrive within the next "
                   "${widget.roadInfo?.duration == null
-                  ? "calculating"
+                  ? "calculating..."
                   : (widget.roadInfo!.duration! / 60).round()} minutes.",
               style: AppTextStyles.body,
               softWrap: true,
@@ -312,7 +312,7 @@ class _BottomCardState extends State<BottomCard> {
                ),
              ),
              Text(
-               "${widget.roadInfo?.duration == null ? "calculating" : (widget.roadInfo!.duration! / 60).round()} minutes to destination.",
+               "${widget.roadInfo?.duration == null ? "calculating..." : (widget.roadInfo!.duration! / 60).round()} minutes to destination.",
                style: AppTextStyles.greyTexts,
              ),
            ],

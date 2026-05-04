@@ -39,6 +39,9 @@ dependencies:
   dotted_line: ^3.2.3
   flutter_screenutil: ^5.9.3
   google_fonts: ^8.1.0
+  fluttertoast: ^9.0.0
+  connectivity_plus: ^7.1.1
+  internet_connection_checker: ^1.0.0+1
 
 dev_dependencies:
   flutter_test:
