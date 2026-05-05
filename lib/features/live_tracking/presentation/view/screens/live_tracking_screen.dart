@@ -17,6 +17,7 @@ class LiveTrackingScreen extends StatefulWidget {
 
 class _LiveTrackingScreenState extends State<LiveTrackingScreen> {
   RoadInfo? roadInfo;
+  bool hasArrived = false;
   @override
   Widget build(BuildContext context) {
     return AnnotatedRegion<SystemUiOverlayStyle>(
@@ -34,6 +35,14 @@ class _LiveTrackingScreenState extends State<LiveTrackingScreen> {
                   print("LTS ETA Time:${roadInfo?.duration}");
 
                 });
+              }, hasArrived: (arrivalStatus) {
+                setState(() {
+                  hasArrived = arrivalStatus;
+                 // print("LTS ETA Time:${roadInfo?.duration}");
+
+                });
+
+
               },),
               Column(
                 mainAxisAlignment: MainAxisAlignment.end,
@@ -41,6 +50,7 @@ class _LiveTrackingScreenState extends State<LiveTrackingScreen> {
                 children: [
                   BottomCard(
                     roadInfo: roadInfo,
+                    hasArrived: hasArrived,
                   ),
                   SizedBox(height: 20,)
                 ],

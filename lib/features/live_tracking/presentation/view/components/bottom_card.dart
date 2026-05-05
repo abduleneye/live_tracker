@@ -4,12 +4,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
-
 import '../../../../../core/utils/app_colors.dart';
 import '../../../../../core/utils/app_text_styles.dart';
+import 'package:intl/intl.dart';
+
 class BottomCard extends StatefulWidget {
   final RoadInfo? roadInfo;
-   const BottomCard({super.key, required this.roadInfo});
+  final bool hasArrived;
+   const BottomCard({super.key, required this.roadInfo,
+     required this.hasArrived});
 
   @override
   State<BottomCard> createState() => _BottomCardState();
@@ -46,7 +49,7 @@ class _BottomCardState extends State<BottomCard> {
                   width: 32,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: AppColors.containerColor,
+                    color: widget.hasArrived ? Colors.green : AppColors.containerColor,
                   ),
                   child: const Icon(
                     Icons.keyboard_arrow_down,
@@ -86,7 +89,25 @@ class _BottomCardState extends State<BottomCard> {
   Widget _buildEtaRow() {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 4, vertical: 16.h),
-      child: Row(
+      child: widget.hasArrived ? Row(
+        children: [
+          Icon(
+            Icons.check_box,
+            size: 18,
+            color: Color(0xff666666),
+          ),
+          SizedBox(width: 12),
+
+          // 👇 THIS is the fix
+          Expanded(
+            child: Text(
+              "Your package has arrived, please proceed to pickup",
+              style: AppTextStyles.body,
+              softWrap: true,
+            ),
+          ),
+        ],
+      ) : Row(
         children: [
           Icon(
             Icons.access_time_sharp,
@@ -100,14 +121,14 @@ class _BottomCardState extends State<BottomCard> {
             child: Text(
               "The package is estimated to arrive within the next "
                   "${widget.roadInfo?.duration == null
-                  ? "calculating..."
+                  ? "calculating.."
                   : (widget.roadInfo!.duration! / 60).round()} minutes.",
               style: AppTextStyles.body,
               softWrap: true,
             ),
           ),
         ],
-      ),
+      )
     );
   }
 
@@ -167,7 +188,7 @@ class _BottomCardState extends State<BottomCard> {
       padding:  EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(50),
-        color: AppColors.containerColor,
+        color: widget.hasArrived ? Colors.green : AppColors.containerColor,
       ),
       child: Row(
         children: [
@@ -182,7 +203,7 @@ class _BottomCardState extends State<BottomCard> {
             child: Icon(
               Icons.phone_outlined,
               size: 14,
-              color: AppColors.containerColor,
+              color: widget.hasArrived ? Colors.green : AppColors.containerColor,
             ),
           ),
           SizedBox(width: 5.w),
@@ -225,21 +246,21 @@ class _BottomCardState extends State<BottomCard> {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 19.5),
       decoration: BoxDecoration(
-        color: const Color(0xfff6f0eb),
+        color: widget.hasArrived ? Colors.green : Color(0xfff6f0eb),
         borderRadius: BorderRadius.circular(30),
       ),
       child: Row(
-        children: const [
+        children:  [
           CircleAvatar(
             radius: 3,
-            backgroundColor: Color(0xfff3801f),
+            backgroundColor: widget.hasArrived ? Colors.white : AppColors.containerColor,
           ),
           SizedBox(width: 5),
           Text(
-            "On Delivery",
+            widget.hasArrived ? "Delivered" : "On Delivery",
             style: TextStyle(
               fontSize: 14,
-              color: Color(0xfff3801f),
+              color: widget.hasArrived ? Colors.white : AppColors.containerColor,
             ),
           ),
         ],
@@ -259,19 +280,22 @@ class _BottomCardState extends State<BottomCard> {
                 shape: BoxShape.circle,
                 border: Border.all(
                   width: 1,
-                  color: const Color(0xfffd4c00),
+                  color: widget.hasArrived ? Colors.green : AppColors.containerColor,
                 ),
               ),
-              child: const CircleAvatar(
+              child:  CircleAvatar(
                 radius: 5,
-                backgroundColor: Color(0xfffd4c00),
+                backgroundColor: widget.hasArrived ? Colors.green : AppColors.containerColor,
               ),
             ),
              SizedBox(
-              height: 60,
+              height: 80,
               child: DottedLine(direction: Axis.vertical),
             ),
-            const Icon(Icons.location_on_outlined),
+             Icon(
+                Icons.location_on_outlined,
+              color: widget.hasArrived ? Colors.green : Colors.black,
+            ),
           ],
         ),
         const SizedBox(width: 5),
@@ -312,7 +336,7 @@ class _BottomCardState extends State<BottomCard> {
                ),
              ),
              Text(
-               "${widget.roadInfo?.duration == null ? "calculating..." : (widget.roadInfo!.duration! / 60).round()} minutes to destination.",
+               widget.hasArrived ?  "" : "${widget.roadInfo?.duration == null ? "calculating..." : (widget.roadInfo!.duration! / 60).round()} minutes to destination.",
                style: AppTextStyles.greyTexts,
              ),
            ],
@@ -321,14 +345,14 @@ class _BottomCardState extends State<BottomCard> {
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-                "10:47 AM",
-              style: AppTextStyles.greyTexts,
-            ),
-            Text(
-                "18 Jan, 2026",
-              style: AppTextStyles.semiBold,
-            ),
+          Text(
+          DateFormat("hh:mm a").format(DateTime.now()),
+          style: AppTextStyles.greyTexts,
+          ),
+        Text(
+        DateFormat("dd MMM, yyyy").format(DateTime.now()),
+        style: AppTextStyles.semiBold,
+        ),
           ],
         ),
       ],
@@ -345,7 +369,10 @@ class _BottomCardState extends State<BottomCard> {
                 "Delivered",
               style: AppTextStyles.greyTexts,
             ),
-            SizedBox(width: 80, child: DottedLine(
+            SizedBox(width: 80, child: widget.hasArrived ? Text(
+              DateFormat("hh:mm a").format(DateTime.now()),
+              style: AppTextStyles.greyTexts,
+            ) : DottedLine(
                 direction: Axis.horizontal,
               dashColor: AppColors.grey,
             )),
@@ -358,7 +385,11 @@ class _BottomCardState extends State<BottomCard> {
                 "Akobo, Ibadan",
               style: AppTextStyles.semiBold,
             ),
-            SizedBox(width: 80, child: DottedLine(direction: Axis.horizontal)),
+            SizedBox(width: 80,
+                child: widget.hasArrived ? Text(
+                  DateFormat("dd MMM, yyyy").format(DateTime.now()),
+                  style: AppTextStyles.semiBold,
+                ) : DottedLine(direction: Axis.horizontal)),
           ],
         ),
       ],

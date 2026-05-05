@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -7,13 +8,16 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
+import 'package:live_tracker/core/utils/location_utils.dart';
 import '../../../../../core/utils/app_colors.dart';
 import '../../../di/tracking_providers.dart';
 
 class MapScreen extends ConsumerStatefulWidget {
   final Function(RoadInfo) onLocationUpdate;
+  final Function(bool) hasArrived;
 
-  const MapScreen({super.key, required this.onLocationUpdate});
+
+  const MapScreen({super.key, required this.onLocationUpdate, required this.hasArrived});
 
   @override
   ConsumerState<MapScreen> createState() => _MapScreenState();
@@ -27,7 +31,8 @@ class _MapScreenState extends ConsumerState<MapScreen> {
   GeoPoint? end;
   GeoPoint? previousPoint;
   bool isUpdating = false;
-  int counter = 0;
+  //List<GeoPoint> fullPath = [];
+  //int counter = 0;
 
   Future<void> handleConnectivity(List<ConnectivityResult> result) async {
     Fluttertoast.showToast(msg: "Listening for network");
@@ -49,11 +54,6 @@ class _MapScreenState extends ConsumerState<MapScreen> {
      //drawRoadPickUpToDrop();
     }
   }
-
-
-
-
-
   void showNoInternetDialog(BuildContext context, VoidCallback onRetry) {
     showDialog(
       context: context,
@@ -102,7 +102,41 @@ class _MapScreenState extends ConsumerState<MapScreen> {
         );      },
     );
   }
-
+  void showDeliveredDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text("Package Status"),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              const Text(
+                "Your package has arrived, thanks for your patronage",
+              ),
+              const SizedBox(height: 16),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.containerColor,
+                  ),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: const Text(
+                    "Close",
+                    style: TextStyle(color: AppColors.background),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );      },
+    );
+  }
   void showNetworkDropToast(){
     Fluttertoast.showToast(
       msg: "Your network is unstable result might be in accurate",
@@ -135,8 +169,8 @@ class _MapScreenState extends ConsumerState<MapScreen> {
 
 
     ref.listen<GeoPoint?>(trackingControllerProvider, (prev, currentPoint) async {
-      if (currentPoint == null) return;
-      if(isUpdating) return; // prevent overlap
+      if (currentPoint == null || isUpdating) return; // prevent overlap
+      // if() return;
       isUpdating = true;
       // Move marker
       if (previousPoint != null) {
@@ -161,9 +195,12 @@ class _MapScreenState extends ConsumerState<MapScreen> {
       }
 
       previousPoint = currentPoint;
-
-      // 🔥 IMPORTANT: control frequency (avoid lag)
-      counter++;
+      if (isNear(currentPoint, end!, 15)) {
+        if (!context.mounted) return;
+        widget.hasArrived(true);
+        showDeliveredDialog(context);
+      }
+     // counter++;
 
     //  if (counter % 4 == 0) {
         final newRoad = await controller.drawRoad(
@@ -179,11 +216,13 @@ class _MapScreenState extends ConsumerState<MapScreen> {
         widget.onLocationUpdate(newRoad);
 
         print("MAP ETA Time: ${newRoad.duration}");
-      isUpdating = false;
+        isUpdating = false;
 
       //}
     }
     );
+
+
 
     Future<void> drawRoadPickUpToDrop() async {
       GeoPoint start = GeoPoint(latitude: 9.0765, longitude: 7.3986);
@@ -199,7 +238,7 @@ class _MapScreenState extends ConsumerState<MapScreen> {
         ),
       );
 
-      final road = await controller.drawRoad(
+      final  newRoad = await controller.drawRoad(
         start,
         end!,
         roadType: RoadType.bike,
@@ -210,11 +249,13 @@ class _MapScreenState extends ConsumerState<MapScreen> {
         ),
       );
 
-      final fullPath = road.route;
+       final fullPath = newRoad.route + [end!];
       if (fullPath.isEmpty) return;
 
       //starting tracking
       ref.read(trackingControllerProvider.notifier).startTracking(fullPath);
+      print("Full Path: $fullPath");
+
     }
 
 
