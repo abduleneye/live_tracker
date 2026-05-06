@@ -35,7 +35,7 @@ This project follows **Clean Architecture** principles with a presentation layer
 
 - **Data Layer**
   - Repository implementations
-  - Services (simulation logic, route handling, network checks)
+  - Services (simulation logic)
 
 ---
 
