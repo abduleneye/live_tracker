@@ -15,14 +15,15 @@ import '../../../di/tracking_providers.dart';
 class MapScreen extends ConsumerStatefulWidget {
   final Function(RoadInfo) onLocationUpdate;
   final Function(bool) hasArrived;
+  final Function(DateTime) whenArrived;
 
 
-  const MapScreen({super.key, required this.onLocationUpdate, required this.hasArrived});
+
+  const MapScreen({super.key, required this.onLocationUpdate, required this.hasArrived, required this.whenArrived});
 
   @override
   ConsumerState<MapScreen> createState() => _MapScreenState();
 }
-
 class _MapScreenState extends ConsumerState<MapScreen> {
   final Connectivity _connectivity = Connectivity();
   StreamSubscription? _connectSub;
@@ -31,7 +32,8 @@ class _MapScreenState extends ConsumerState<MapScreen> {
   GeoPoint? end;
   GeoPoint? previousPoint;
   bool isUpdating = false;
-  //List<GeoPoint> fullPath = [];
+  //bool hasArrivedTriggered = false;
+  //late Timer arrivalTimer;
   //int counter = 0;
 
   Future<void> handleConnectivity(List<ConnectivityResult> result) async {
@@ -139,7 +141,7 @@ class _MapScreenState extends ConsumerState<MapScreen> {
   }
   void showNetworkDropToast(){
     Fluttertoast.showToast(
-      msg: "Your network is unstable result might be in accurate",
+      msg: "Your network is disabled result might be in accurate",
       toastLength: Toast.LENGTH_LONG,
       gravity: ToastGravity.BOTTOM,
       backgroundColor: Colors.black,
@@ -169,40 +171,37 @@ class _MapScreenState extends ConsumerState<MapScreen> {
 
 
     ref.listen<GeoPoint?>(trackingControllerProvider, (prev, currentPoint) async {
-      if (currentPoint == null || isUpdating) return; // prevent overlap
-      // if() return;
+      if (currentPoint == null) return;
+
+      if (isUpdating) return;
+
       isUpdating = true;
-      // Move marker
-      if (previousPoint != null) {
-        await controller.changeLocationMarker(
-          oldLocation: previousPoint!,
-          newLocation: currentPoint,
-          markerIcon: MarkerIcon(
-            icon: Icon(Icons.directions_bike_rounded,
-                color: Colors.red, size: 80),
-          ),
-        );
-        await controller.moveTo(currentPoint, animate: true);
 
-      } else {
-        await controller.addMarker(
-          currentPoint,
-          markerIcon: MarkerIcon(
-            icon: Icon(Icons.directions_bike_rounded,
-                color: Colors.red, size: 80),
-          ),
-        );
-      }
+      try {
+        // move marker
+        if (previousPoint != null) {
+          await controller.changeLocationMarker(
+            oldLocation: previousPoint!,
+            newLocation: currentPoint,
+            markerIcon: MarkerIcon(
+              icon: Icon(Icons.directions_bike_rounded,
+                  color: Colors.red, size: 80),
+            ),
+          );
 
-      previousPoint = currentPoint;
-      if (isNear(currentPoint, end!, 15)) {
-        if (!context.mounted) return;
-        widget.hasArrived(true);
-        showDeliveredDialog(context);
-      }
-     // counter++;
+          await controller.moveTo(currentPoint, animate: true);
+        } else {
+          await controller.addMarker(
+            currentPoint,
+            markerIcon: MarkerIcon(
+              icon: Icon(Icons.directions_bike_rounded,
+                  color: Colors.red, size: 80),
+            ),
+          );
+        }
 
-    //  if (counter % 4 == 0) {
+        previousPoint = currentPoint;
+
         final newRoad = await controller.drawRoad(
           currentPoint,
           end!,
@@ -213,14 +212,48 @@ class _MapScreenState extends ConsumerState<MapScreen> {
             roadWidth: 10,
           ),
         );
+
         widget.onLocationUpdate(newRoad);
 
-        print("MAP ETA Time: ${newRoad.duration}");
-        isUpdating = false;
+        print("ETA: ${newRoad.duration}");
 
-      //}
-    }
-    );
+        // arrivalTimer = Timer.periodic(Duration(seconds: 2), (_) async {
+        //   if (hasArrivedTriggered) {
+        //     arrivalTimer.cancel();
+        //     return;
+        //   }
+
+          if (isNear(currentPoint, end!, 50)) {
+            Fluttertoast.showToast(
+              msg: "Has arrived",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              backgroundColor: Colors.black,
+              textColor: Colors.white,
+              fontSize: 16.0,
+            );
+
+            print("Has arrived");
+
+            //hasArrivedTriggered = true;
+
+           // arrivalTimer.cancel();
+
+            await controller.moveTo(end!, animate: true);
+
+           if (!context.mounted) return;
+            showDeliveredDialog(context);
+            widget.hasArrived(true);
+            widget.whenArrived(DateTime.now());
+          }
+      //  });
+
+      } catch (e) {
+        print("TRACKING ERROR: $e");
+      } finally {
+        isUpdating = false;
+      }
+    });
 
 
 
@@ -249,12 +282,14 @@ class _MapScreenState extends ConsumerState<MapScreen> {
         ),
       );
 
-       final fullPath = newRoad.route + [end!];
+
+      final fullPath = newRoad.route + [end!];
       if (fullPath.isEmpty) return;
 
-      //starting tracking
+      print("RAW ROUTE LENGTH: ${newRoad.route.length}");
+      print("FULL PATH BEFORE TRACKING: $fullPath");
+
       ref.read(trackingControllerProvider.notifier).startTracking(fullPath);
-      print("Full Path: $fullPath");
 
     }
 

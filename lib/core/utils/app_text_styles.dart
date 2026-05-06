@@ -5,6 +5,13 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class AppTextStyles {
+
+  static final TextStyle appBar = GoogleFonts.inter(
+      fontSize: 20,
+      fontWeight: FontWeight.w600,
+      color: Color(0xff1B1C1E)
+  );
+
   static final TextStyle body = GoogleFonts.inter(
     fontSize: 12,
     fontWeight: FontWeight.w400,

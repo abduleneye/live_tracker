@@ -11,8 +11,9 @@ import 'package:intl/intl.dart';
 class BottomCard extends StatefulWidget {
   final RoadInfo? roadInfo;
   final bool hasArrived;
+  final DateTime? whenArrived;
    const BottomCard({super.key, required this.roadInfo,
-     required this.hasArrived});
+     required this.hasArrived, required this.whenArrived});
 
   @override
   State<BottomCard> createState() => _BottomCardState();
@@ -21,6 +22,15 @@ class BottomCard extends StatefulWidget {
 class _BottomCardState extends State<BottomCard> {
 
   bool isExpanded = false;
+  DateTime? whenArrived;
+  DateTime? startTime;
+
+  @override
+  void initState() {
+    super.initState();
+    startTime = DateTime.now();
+
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -346,11 +356,11 @@ class _BottomCardState extends State<BottomCard> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
           Text(
-          DateFormat("hh:mm a").format(DateTime.now()),
+          DateFormat("hh:mm a").format(startTime!),
           style: AppTextStyles.greyTexts,
           ),
         Text(
-        DateFormat("dd MMM, yyyy").format(DateTime.now()),
+        DateFormat("dd MMM, yyyy").format(startTime!),
         style: AppTextStyles.semiBold,
         ),
           ],
@@ -361,6 +371,7 @@ class _BottomCardState extends State<BottomCard> {
 
   Widget _buildBottomJourneyInfo() {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children:  [
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -370,7 +381,7 @@ class _BottomCardState extends State<BottomCard> {
               style: AppTextStyles.greyTexts,
             ),
             SizedBox(width: 80, child: widget.hasArrived ? Text(
-              DateFormat("hh:mm a").format(DateTime.now()),
+              DateFormat("hh:mm a").format(widget.whenArrived!),
               style: AppTextStyles.greyTexts,
             ) : DottedLine(
                 direction: Axis.horizontal,
@@ -387,7 +398,9 @@ class _BottomCardState extends State<BottomCard> {
             ),
             SizedBox(width: 80,
                 child: widget.hasArrived ? Text(
-                  DateFormat("dd MMM, yyyy").format(DateTime.now()),
+                  DateFormat("dd MMM, yyyy").format(widget.whenArrived!),
+                  //maxLines: 1,
+                  //overflow: TextOverflow.ellipsis,
                   style: AppTextStyles.semiBold,
                 ) : DottedLine(direction: Axis.horizontal)),
           ],
