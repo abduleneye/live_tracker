@@ -11,7 +11,7 @@ The app simulates real-time movement of a vehicle along predefined routes and di
 - 🗺️ Interactive map rendering using OpenStreetMap
 - 🚗 Route-based movement simulation
 - ⏱️ Continuous position updates (like a live delivery system)
-- 🌐 Network connectivity check and handling
+- 🌐 Network connectivity monitoring (UI-level handling using connectivity_plus and internet_connection_checker with user feedback via dialogs and toasts)
 - 📏 Distance calculation using the Haversine equation (for arrival detection)
 - 📦 Clean Architecture implementation
 - ⚡ State management using Riverpod
@@ -123,12 +123,16 @@ This allows for accurate arrival detection based on real-world distance rather t
 
 ---
 
-## 🌐 Network Handling
+## 🌐 Network Handling Approach
 
-The app includes basic network connectivity checks to:
-- Detect online/offline states
-- Prevent unnecessary operations when offline
-- Improve user experience during connectivity issues
+Network connectivity is handled at the presentation layer due to its direct dependency on UI state and lifecycle events.
+
+The app uses:
+- `connectivity_plus` to detect network state changes
+- `internet_connection_checker` to verify actual internet access
+- UI feedback mechanisms such as dialogs and toast messages for user awareness
+
+This approach ensures real-time feedback during map interactions and route simulation without introducing unnecessary abstraction into the data layer for a UI-driven concern.
 
 ---
 
