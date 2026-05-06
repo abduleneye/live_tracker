@@ -78,23 +78,30 @@ flutter run
 ## 📂 Project Structure
 
 ~~~text
+## 📂 Project Structure
+
+~~~text
 lib/
 │
-├── presentation/
-│   ├── ui/
-│   ├── controllers/   # Riverpod ViewModels
-│
-├── domain/
-│   ├── repositories/  # Abstract contracts
-│
-├── data/
-│   ├── repositories/  # Implementations
-│   ├── services/      # Simulation logic
+├── features/
+│   └── live_tracking/
+│       ├── presentation/
+│       │   ├── ui/
+│       │   ├── controllers/   # Riverpod ViewModels
+│       │
+│       ├── domain/
+│       │   ├── repositories/  # Abstract contracts
+│       │
+│       ├── data/
+│       │   ├── repositories/  # Implementations
+│       │   ├── services/      # Simulation logic & network handling
 │
 └── core/
     └── utils/
 ~~~
-
+> 💡 **Note:**  
+> This project uses a **feature-first modular structure**, where each feature (e.g., `live_tracking`) contains its own `presentation`, `domain`, and `data` layers.  
+> This approach improves scalability, maintainability, and separation of concerns, making it easier to extend the app with additional features without affecting existing modules.
 ---
 
 ## ⚙️ Simulation Logic
