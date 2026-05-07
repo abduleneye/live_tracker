@@ -32,9 +32,9 @@ class _MapScreenState extends ConsumerState<MapScreen> {
   GeoPoint? end;
   GeoPoint? previousPoint;
   bool isUpdating = false;
-  //bool hasArrivedTriggered = false;
+  bool hasArrivedTriggered = false;
   //late Timer arrivalTimer;
-  //int counter = 0;
+  int counter = 0;
 
   Future<void> handleConnectivity(List<ConnectivityResult> result) async {
     Fluttertoast.showToast(msg: "Listening for network");
@@ -201,21 +201,24 @@ class _MapScreenState extends ConsumerState<MapScreen> {
         }
 
         previousPoint = currentPoint;
+        counter++;
 
-        final newRoad = await controller.drawRoad(
-          currentPoint,
-          end!,
-          roadType: RoadType.bike,
-          roadOption: RoadOption(
-            zoomInto: false,
-            roadColor: Colors.red,
-            roadWidth: 10,
-          ),
-        );
+       if(counter % 4 == 0){
+         final newRoad = await controller.drawRoad(
+           currentPoint,
+           end!,
+           roadType: RoadType.bike,
+           roadOption: RoadOption(
+             zoomInto: false,
+             roadColor: Colors.red,
+             roadWidth: 10,
+           ),
+         );
 
-        widget.onLocationUpdate(newRoad);
+         widget.onLocationUpdate(newRoad);
 
-        print("ETA: ${newRoad.duration}");
+         print("ETA: ${newRoad.duration}");
+       }
 
         // arrivalTimer = Timer.periodic(Duration(seconds: 2), (_) async {
         //   if (hasArrivedTriggered) {
@@ -223,7 +226,8 @@ class _MapScreenState extends ConsumerState<MapScreen> {
         //     return;
         //   }
 
-          if (isNear(currentPoint, end!, 50)) {
+          if (isNear(currentPoint, end!, 50) && !hasArrivedTriggered) {
+            hasArrivedTriggered = true;
             Fluttertoast.showToast(
               msg: "Has arrived",
               toastLength: Toast.LENGTH_SHORT,
@@ -306,7 +310,7 @@ class _MapScreenState extends ConsumerState<MapScreen> {
 
         if (isReady) {
           Fluttertoast.showToast(
-            msg: "Map is ready",
+            msg: "Map Initialized...",
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.BOTTOM,
             backgroundColor: Colors.black,
@@ -348,7 +352,7 @@ class _MapScreenState extends ConsumerState<MapScreen> {
         }
         else{
           Fluttertoast.showToast(
-            msg: "Map is not ready",
+            msg: "Initializing map...",
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.BOTTOM,
             backgroundColor: Colors.black,
@@ -367,6 +371,7 @@ class _MapScreenState extends ConsumerState<MapScreen> {
   @override
   void dispose() {
     controller.dispose();
+    _connectSub?.cancel();
     super.dispose();
   }
 }
