@@ -28,12 +28,12 @@ The app simulates real-time movement of a vehicle along predefined routes and di
 ## 📸 App Screenshots
 
 <p align="center">
-  <img src="screenshots/1.png" width="200"/>
-  <img src="screenshots/2.png" width="200"/>
-  <img src="screenshots/3.png" width="200"/>
-  <img src="screenshots/4.png" width="200"/>
-  <img src="screenshots/5.png" width="200"/>
-  <img src="screenshots/6.png" width="200"/>
+  <img src="screen_shots/1.png" width="200"/>
+  <img src="screen_shots/2.png" width="200"/>
+  <img src="screen_shots/3.png" width="200"/>
+  <img src="screen_shots/4.png" width="200"/>
+  <img src="screen_shots/5.png" width="200"/>
+  <img src="screen_shots/6.png" width="200"/>
 </p>
 
 ---
