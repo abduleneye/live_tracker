@@ -30,8 +30,8 @@ The app simulates real-time movement of a vehicle along predefined routes and di
 <p align="start">
   <img src="https://github.com/abduleneye/live_tracker/blob/master/screen_shots/1.jpg" width="200"/>
   <img src="https://github.com/abduleneye/live_tracker/blob/master/screen_shots/2.jpg" width="200"/>
-  <img src="https://github.com/abduleneye/live_tracker/blob/master/screen_shots/3.jpg" width="200"/>
   <img src="https://github.com/abduleneye/live_tracker/blob/master/screen_shots/4.jpg" width="200"/>
+  <img src="https://github.com/abduleneye/live_tracker/blob/master/screen_shots/3.jpg" width="200"/>
   <img src="https://github.com/abduleneye/live_tracker/blob/master/screen_shots/5.jpg" width="200"/>
   <img src="https://github.com/abduleneye/live_tracker/blob/master/screen_shots/6.jpg" width="200"/>
 </p>
