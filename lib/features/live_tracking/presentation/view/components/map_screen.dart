@@ -65,7 +65,7 @@ class _MapScreenState extends ConsumerState<MapScreen> {
           title: const Text("No Internet"),
           content: Column(
             mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.stretch, // 👈 important
+            crossAxisAlignment: CrossAxisAlignment.stretch, 
             children: [
               const Text(
                 "Please check your connection and try again.",
