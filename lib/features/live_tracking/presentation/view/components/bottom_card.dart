@@ -108,7 +108,7 @@ class _BottomCardState extends State<BottomCard> {
           ),
           SizedBox(width: 12),
 
-          // 👇 THIS is the fix
+          
           Expanded(
             child: Text(
               "Your package has arrived, please proceed to pickup",
@@ -126,7 +126,7 @@ class _BottomCardState extends State<BottomCard> {
           ),
           SizedBox(width: 12),
 
-          // 👇 THIS is the fix
+          
           Expanded(
             child: Text(
               "The package is estimated to arrive within the next "
